@@ -1,35 +1,47 @@
 import React, { SyntheticEvent, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 
 const Register = () => {
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [redirect, setRedirect] = useState(false)
 
   const submitEvent = async (e: SyntheticEvent) => {
     e.preventDefault()
 
-    const response = await fetch('#', {
+    await fetch('http://localhost:8000/api/users/register', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
       body: JSON.stringify({
-        name,
+        firstName,
+        lastName,
         email,
         password
       })
     })
 
-    const content = await response.json()
+    setRedirect(true)
+  }
 
-    console.log(content)
-
+  if(redirect) {
+    return <Navigate to="/login" />
   }
 
   return (
     <form onSubmit={submitEvent}>
       <h1 className="h3 mb-3 fw-normal">Please sign up</h1>
 
-      <input type="name" className="form-control" placeholder="Name" required 
-        onChange={e => setName(e.target.value)}
+      <input type="name" className="form-control" placeholder="First Name" required 
+        onChange={e => setFirstName(e.target.value)}
+      />
+
+      <input type="name" className="form-control" placeholder="Last Name" required 
+        onChange={e => setLastName(e.target.value)}
       />
 
       <input type="email" className="form-control" placeholder="Email Address" required 
