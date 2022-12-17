@@ -1,7 +1,8 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import axios from 'axios'
 
-const Login = () => {
+const Login = (props: any) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [redirect, setRedirect] = useState(false)
@@ -9,23 +10,37 @@ const Login = () => {
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault()
 
-    await fetch('http://localhost:8000/api/auth/login', {
+    // const response = await fetch('http://localhost:8000/api/auth/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   credentials: 'include',
+    //   body: JSON.stringify({
+    //     email,
+    //     password
+    //   })
+    // })
+
+    const response = await axios({
+      url: 'http://localhost:8000/api/auth/login',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
-      body: JSON.stringify({
+      withCredentials: true,
+      data: JSON.stringify({
         email,
         password
       })
     })
+    .then(res => props.changeIdNumber(res.data))
 
     setRedirect(true)
   }
 
   if(redirect) {
-    return <Navigate to="/" />
+    return <Navigate to="/home" />
   }
 
   return (

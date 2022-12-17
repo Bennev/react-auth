@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Register = () => {
   const [firstName, setFirstName] = useState('')
@@ -11,13 +12,28 @@ const Register = () => {
   const submitEvent = async (e: SyntheticEvent) => {
     e.preventDefault()
 
-    await fetch('http://localhost:8000/api/users/register', {
+    // await fetch('http://localhost:8000/api/users/register', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Access-Control-Allow-Origin': '*',
+    //   },
+    //   body: JSON.stringify({
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     password
+    //   })
+    // })
+
+    await axios({
+      url: 'http://localhost:8000/api/users/register',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify({
+      data: JSON.stringify({
         firstName,
         lastName,
         email,
@@ -29,7 +45,7 @@ const Register = () => {
   }
 
   if(redirect) {
-    return <Navigate to="/login" />
+    return <Navigate to="/" />
   }
 
   return (
