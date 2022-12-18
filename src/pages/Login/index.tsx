@@ -1,6 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import axios from 'axios'
+import "./style.css"
 
 const Login = (props: any) => {
   const [email, setEmail] = useState('')
@@ -34,7 +35,7 @@ const Login = (props: any) => {
         password
       })
     })
-    .then(res => props.changeIdNumber(res.data))
+    .then(res => res.data)
 
     setRedirect(true)
   }
@@ -44,7 +45,7 @@ const Login = (props: any) => {
   }
 
   return (
-    <form onSubmit={submit}>
+    <form className="form-signin" onSubmit={submit}>
       <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
       <input type="email" className="form-control" placeholder="Email Address" required 

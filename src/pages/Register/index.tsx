@@ -1,6 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import axios from 'axios'
+import "./style.css"
 
 const Register = () => {
   const [firstName, setFirstName] = useState('')
@@ -49,7 +50,7 @@ const Register = () => {
   }
 
   return (
-    <form onSubmit={submitEvent}>
+    <form className="form-signup" onSubmit={submitEvent}>
       <h1 className="h3 mb-3 fw-normal">Please sign up</h1>
 
       <input type="name" className="form-control" placeholder="First Name" required 

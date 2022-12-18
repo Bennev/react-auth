@@ -1,12 +1,13 @@
-* {
-  box-sizing: border-box;
+.App {
+  min-height: 100vh;
 }
 
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
+main {
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  margin: 1rem;
+  min-height: 100vh;
 }
 
 .form-signin .form-control {

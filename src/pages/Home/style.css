@@ -1,0 +1,43 @@
+.main {
+  margin-top: 6rem;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}
+
+.title-list-company {
+  margin-bottom: 3rem;
+  margin-left: 11.69rem;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color:darkgreen;
+}
+
+label {
+  display: block;
+}
+
+textarea {
+  margin-bottom: 2rem;
+  resize: none;
+}
+
+.btn-create-company {
+  margin-left: 11.69rem;
+  margin-bottom: 1rem;
+}
+
+.table {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.btn-modal-create-company {
+  width: 5rem;
+}
