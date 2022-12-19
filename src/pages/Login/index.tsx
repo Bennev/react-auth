@@ -35,7 +35,10 @@ const Login = (props: any) => {
         password
       })
     })
-    .then(res => res.data)
+    .then(res => {
+      console.log(res.data)
+      props.handleUserId(res.data.id)
+    })
 
     setRedirect(true)
   }

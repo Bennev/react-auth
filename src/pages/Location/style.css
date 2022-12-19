@@ -1,0 +1,21 @@
+.location-page-name,
+.location-page-address {
+  margin-left: 11.69rem;
+}
+
+.location-page-inline {
+  display: flex;
+  justify-content:space-between ;
+  max-width: 105.24rem;
+}
+
+.location-page-btns-title {
+  display: flex;
+  column-gap: 2rem;
+}
+
+.location-title-list-accountable {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  margin-left: 11.69rem;
+}

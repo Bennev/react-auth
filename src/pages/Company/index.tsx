@@ -1,29 +1,40 @@
 import "./style.css"
-import React, { useEffect, useState, SyntheticEvent } from 'react'
+import { useEffect, useState, SyntheticEvent } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
+import { Dispatch } from '@reduxjs/toolkit'
+import { useSelector, useDispatch } from 'react-redux'
+import { getAllAccountablesByCompany, getAllLocations, getCompanyById } from '../../store/fetchActions'
+import { RootState } from "../../store";
+import { useNavigate } from "react-router-dom"
+import api from "../../services/api"
 
 
 const Company = () => {
-  const [show, setShow] = useState(false);
   const [showCreateLocal, setShowCreateLocal] = useState(false);
   const [showCreateAccountable, setShowCreateAccountable] = useState(false);
-  const {register, handleSubmit, setValue, setFocus} = useForm();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const navigate = useNavigate();
 
-  const handleCreateLocalClose = () => setShowCreateLocal(false);
-  const handleCreateLocalShow = () => setShowCreateLocal(true);
+  const {register, handleSubmit, setValue, getValues, setFocus} = useForm();
 
-  const handleCreateAccountableClose = () => setShowCreateAccountable(false);
-  const handleCreateAccountableShow = () => setShowCreateAccountable(true);
+  const { company } = useSelector((state: RootState) => state.Companies);
+  const { locations } = useSelector((state: RootState) => state.Locations);
+  const { accountables } = useSelector((state: RootState) => state.Accountables);
+  const dispatch: Dispatch<any> = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCompanyById())
+    dispatch(getAllLocations())
+    dispatch(getAllAccountablesByCompany())
+  }, [])
 
   const onSubmit = (e: any) => {
     console.log(e);
-    handleCreateLocalClose()
+    setShowCreateLocal(false);
+    setShowCreateAccountable(false);
   }
 
   const checkCEPLocal = (e: any) => {
@@ -54,6 +65,37 @@ const Company = () => {
     })
   }
 
+  const postAccountable = async (e: any, id: string) => {
+    e.preventDefault()
+    api
+    .post('/accountables/register', {
+      name: getValues("acc-name"),
+      phone: getValues("acc-phone"),
+      address: getValues("acc-address") + ", " + getValues("acc-address-number") + ", " + getValues("acc-address-comp") + ", " + getValues("acc-neighbor") + ", " + getValues("acc-city") + ", " + getValues("acc-state"),
+      location: id,
+    })
+    .then(res => console.log(res))
+    .catch(console.log)
+
+    setShowCreateLocal(false)
+  }
+
+  const postLocation = async (e: any) => {
+    e.preventDefault()
+    api
+      .post('/locations/register', {
+        name: getValues("loc-name"),
+        address: getValues("loc-address") + ", " + getValues("loc-address-number") + ", " + getValues("loc-address-comp") + ", " + getValues("loc-neighbor") + ", " + getValues("loc-city") + ", " + getValues("loc-state"),
+        company: company.id
+      })
+      .then(res => {
+        postAccountable(e, res.data.id)
+        console.log(res.data.id)})
+      .catch(console.log)
+
+      
+  }
+
   function LocationModal(props: any) {
     return (
       <Modal
@@ -61,7 +103,7 @@ const Company = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={showCreateLocal}
-        onHide={handleCreateLocalClose}
+        onHide={() => setShowCreateLocal(false)}
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -69,11 +111,11 @@ const Company = () => {
           </Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={postLocation}>
+          <Modal.Body>
             <label>
               <h6>Nome</h6>
-              <input type="text" className="form-control company-name" {...register("company-name")} placeholder="Nome da Empresa" required/>
+              <input type="text" className="form-control loc-name" {...register("loc-name")} placeholder="Nome" required/>
             </label>
             <label>
               <h6>CEP</h6>
@@ -128,7 +170,7 @@ const Company = () => {
             </label>
             <label>
               <h6>Complemento</h6>
-              <input type="text" className="form-control acc-address-comp" {...register("acc-address-comp")} placeholder="Complemento" required/>
+              <input type="text" className="form-control acc-address-comp" {...register("acc-address-comp")} placeholder="Complemento" />
             </label>
             <label>
               <h6>Bairro</h6>
@@ -142,18 +184,18 @@ const Company = () => {
               <h6>Estado</h6>
               <input type="text" className="form-control acc-state" {...register("acc-state")} placeholder="Estado" disabled required/>
             </label>
-          </form>
-        </Modal.Body>
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCreateLocalClose}>
-            Cancelar
-          </Button>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowCreateLocal(false)}>
+              Cancelar
+            </Button>
 
-          <Button variant="success" className="btn-modal-create-location" onClick={handleSubmit(onSubmit)}>
-            Criar
-          </Button>
-        </Modal.Footer>
+            <Button variant="success" className="btn-modal-create-location" type="submit">
+              Criar
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     );
   }
@@ -165,7 +207,7 @@ const Company = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         show={showCreateAccountable}
-        onHide={handleCreateAccountableClose}
+        onHide={() => setShowCreateAccountable(false)}
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
@@ -215,7 +257,7 @@ const Company = () => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCreateAccountableClose}>
+          <Button variant="secondary" onClick={() => setShowCreateAccountable(false)}>
             Cancelar
           </Button>
 
@@ -227,15 +269,22 @@ const Company = () => {
     );
   }
 
+
   return (
     <div className="company-main">
-      <h1 className="company-page-name">Nome da Empresa</h1>
-      <h4 className="company-page-cnpj">CNPJ: </h4>
-      <h6 className="company-page-description">Descrição: </h6>
+      <div className="company-page-inline">
+        <h1 className="company-page-name">{company?.name}</h1>
+        <div className="company-page-btns-title">
+          <Button className="company-page-edi-btn" variant="warning">Editar Empresa</Button>{' '}
+          <Button className="company-page-del-btn" variant="danger">Excluir Empresa</Button>{' '}
+        </div>
+      </div>
+      <h4 className="company-page-cnpj">CNPJ: {company?.cnpj}</h4>
+      <h6 className="company-page-description">Descrição: {company?.description}</h6>
 
       <h4 className="title-list-location">Lista de Locais da Empresa </h4>
 
-      <Button className="btn btn-success btn-create-location" variant="primary" onClick={handleCreateLocalShow}>
+      <Button className="btn btn-success btn-create-location" variant="primary" onClick={() => setShowCreateLocal(true)}>
         Criar Local
       </Button>
 
@@ -252,16 +301,18 @@ const Company = () => {
         </thead>
         <tbody>
 
-            <tr>
-              <th scope="row"><a href="#">789</a></th>
-              <td>000</td>
+          {locations.map((locations: any, index: any) => 
+            <tr  onClick={() => navigate("/location")}>
+              <th scope="row">{locations.name}</th>
+              <td>{locations.address}</td>
             </tr>
+          )}
         </tbody>
       </table>
 
       <h4 className="title-list-accountable">Lista de Responsáveis da Empresa </h4>
 
-      <Button className="btn btn-success btn-create-accountable" variant="primary" onClick={handleCreateAccountableShow}>
+      <Button className="btn btn-success btn-create-accountable" variant="primary" onClick={() => setShowCreateAccountable(true)}>
         Criar Responsável
       </Button>
 
@@ -269,22 +320,34 @@ const Company = () => {
         show={showCreateAccountable}
       />
 
-      <table className="table table-bordered table-hover">
+      <table id="company-table-accountable" className="table table-bordered ">
         <thead className="thead-dark">
           <tr>
             <th scope="col">NOME</th>
             <th scope="col">TELEFONE</th>
             <th scope="col">ENDEREÇO</th>
             <th scope="col">PRINCIPAL</th>
+            <th scope="col">AÇÕES</th>
           </tr>
         </thead>
         <tbody>
-            <tr>
-              <th scope="row"><a href="#">TESTE</a></th>
-              <td>123</td>
-              <td>456</td>
-              <td>SIM</td>
-            </tr>
+            {accountables.map((accountables: any, index: any) => 
+              <tr>
+                <th scope="row">{accountables.name}</th>
+                <td>{accountables.phone}</td>
+                <td>{accountables.address}</td>
+                <td>teste</td>
+                <td>
+                <a onClick={() => setShowCreateAccountable(true)}>
+                  Editar
+                </a>
+                <br></br>
+                <a onClick={() => setShowCreateAccountable(true)}>
+                  Excluir
+                </a>
+                </td>
+              </tr>
+            )}
         </tbody>
       </table>
     </div>

@@ -6,8 +6,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home'
 import Register from './pages/Register'
 import Company from './pages/Company';
+import Location from './pages/Location';
+import Ticket from './pages/Ticket';
 
 function App() {
+  const [userId, setUserId] = useState("")
+
+  const handleUserId = (id: string) => {
+    setUserId(id)
+  }
 
   return (
     <div className="App">
@@ -16,12 +23,12 @@ function App() {
 
         <main>
             <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/" element={<Login handleUserId={handleUserId} />} />
+              <Route path="/home" element={<Home userId={userId} />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/ticket" element={<Register />} />
+              <Route path="/tickets" element={<Ticket />} />
               <Route path="/company" element={<Company />} />
-              <Route path="/location" element={<Register />} />
+              <Route path="/location" element={<Location />} />
             </Routes>
         </main>
       </BrowserRouter>

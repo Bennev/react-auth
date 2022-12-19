@@ -4,6 +4,17 @@
   margin-left: 11.69rem;
 }
 
+.company-page-inline {
+  display: flex;
+  justify-content:space-between ;
+  max-width: 105.24rem;
+}
+
+.company-page-btns-title {
+  display: flex;
+  column-gap: 2rem;
+}
+
 .acc-pri {
   margin-top: 2rem;
 }
@@ -11,13 +22,13 @@
 .btn-create-location,
 .btn-create-accountable {
   margin-left: 11.69rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .title-list-location,
 .title-list-accountable {
-  margin-top: 5rem;
-  margin-bottom: 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
   margin-left: 11.69rem;
 }
 

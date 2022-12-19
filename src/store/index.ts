@@ -1,17 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import usersReducer from './ducks/locations'
-import companiesReducer from './ducks/companies'
+import usersReducer from './ducks/users'
+import companiesReducer, { CompaniesProps } from './ducks/companies'
 import locationsReducer from './ducks/locations'
 import accountablesReducer from './ducks/accountables'
 import ticketsReducer from './ducks/tickets'
 
-export default configureStore({
+
+
+const store = configureStore({
   reducer: {
-    user: usersReducer,
-    companies: companiesReducer,
-    locations: locationsReducer,
-    accountables: accountablesReducer,
-    tickets: ticketsReducer
+    Users: usersReducer,
+    Companies: companiesReducer,
+    Locations: locationsReducer,
+    Accountables: accountablesReducer,
+    Tickets: ticketsReducer
   },
 })
+
+export type RootState = ReturnType<typeof store.getState>
+
+export default store

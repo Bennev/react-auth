@@ -1,5 +1,5 @@
 .App {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 main {
@@ -7,7 +7,7 @@ main {
   /* justify-content: center; */
   /* align-items: center; */
   margin: 1rem;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .form-signin .form-control {
