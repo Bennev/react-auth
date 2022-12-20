@@ -1,7 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 
 export const createAccountable = createAction('CREATE_ACCOUNTABLE')
-export const updateAccountable = createAction('UPDATE_ACCOUNTABLE')
+// export const updateAccountable = createAction('UPDATE_ACCOUNTABLE')
 export const deleteAccountable = createAction('DELETE_ACCOUNTABLE')
 export const getAccountables = createAction('GET_ACCOUNTABLES')
 const initialState: AccountablesProps = {
@@ -10,7 +10,8 @@ const initialState: AccountablesProps = {
     id: "",
     name: "",
     phone: "",
-    address: ""
+    address: "",
+    principal: "",
   }
 }
 
@@ -30,5 +31,6 @@ interface Accountable {
   id: string,
   name: string,
   phone: string,
-  address: string
+  address: string,
+  principal: string,
 }

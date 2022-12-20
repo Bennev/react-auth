@@ -36,3 +36,11 @@
 .btn-modal-create-accountable {
   width: 5rem;
 }
+
+.a-edit:hover {
+  color:gold;
+}
+
+.a-delete:hover {
+  color:red;
+}

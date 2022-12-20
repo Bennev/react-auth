@@ -3,7 +3,7 @@ import { useEffect, useState, SyntheticEvent } from 'react'
 import axios from 'axios'
 import { Dispatch } from '@reduxjs/toolkit'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAllCompanies, getUserById } from '../../store/fetchActions'
+import { getAllCompanies } from '../../store/fetchActions'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
@@ -11,27 +11,19 @@ import { RootState } from "../../store"
 import { useNavigate } from "react-router-dom"
 import api from "../../services/api"
 
-const Home = (props: any) => {
+const Home = () => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
-  const {register, handleSubmit, setValue, getValues, setFocus} = useForm();
+  const {register, setValue, getValues, setFocus} = useForm();
 
   const { user } = useSelector((state: RootState) => state.Users);
   const { companies } = useSelector((state: RootState) => state.Companies);
   const dispatch: Dispatch<any> = useDispatch();
 
   useEffect(() => {
-    dispatch(getUserById(user.id))
-    dispatch(getAllCompanies(props.userId))
+    dispatch(getAllCompanies(user.id))
   }, [])
-
-  const onSubmit = (e: any) => {
-    console.log(e);
-    
-  }
-
-  // console.log(user)
 
   const checkCEP = (e: any) => {
     const cep = e.target.value.replace(/\D/g, '');
@@ -39,7 +31,7 @@ const Home = (props: any) => {
     axios({
       url: `https://viacep.com.br/ws/${cep}/json/`})
       .then(res => {
-        setValue('acc-address', res.data.logradouro);
+        setValue('acc-address-street', res.data.logradouro);
         setValue('acc-neighbor', res.data.bairro);
         setValue('acc-city', res.data.localidade);
         setValue('acc-state', res.data.uf);
@@ -53,10 +45,11 @@ const Home = (props: any) => {
     .post('/accountables/register', {
       name: getValues("acc-name"),
       phone: getValues("acc-phone"),
-      address: getValues("acc-address") + ", " + getValues("acc-address-number") + ", " + getValues("acc-address-comp") + ", " + getValues("acc-neighbor") + ", " + getValues("acc-city") + ", " + getValues("acc-state"),
+      address: getValues("acc-address-street") + ", " + getValues("acc-address-number") + ", " + getValues("acc-address-comp") + ", " + getValues("acc-neighbor") + ", " + getValues("acc-city") + ", " + getValues("acc-state"),
       company: id,
+      principal: true,
     })
-    .then(res => console.log(res))
+    .then(res => dispatch(getAllCompanies(user.id)))
     .catch(console.log)
 
     setShow(false)
@@ -76,7 +69,6 @@ const Home = (props: any) => {
         console.log(res.data.id)})
       .catch(console.log)
 
-    
   }
 
   function CompanyModal(props: any) {
@@ -108,7 +100,7 @@ const Home = (props: any) => {
               <h6>Descrição</h6>
               <textarea className="form-control company-description" {...register("company-description")} rows={3} placeholder="Descrição da Empresa"></textarea>
             </label>
-            <h5>Responsável Principal</h5>
+            <h5>Responsável Principal da Empresa</h5>
             <label>
               <h6>Nome</h6>
               <input type="text" className="form-control acc-name" {...register("acc-name")} placeholder="Nome" required/>
@@ -123,7 +115,7 @@ const Home = (props: any) => {
             </label>
             <label>
               <h6>Rua</h6>
-              <input type="text" className="form-control acc-address" {...register("acc-address")} placeholder="Rua" disabled required/>
+              <input type="text" className="form-control acc-address-street" {...register("acc-address-street")} placeholder="Rua" disabled required/>
             </label>
             <label>
               <h6>Número</h6>
@@ -165,6 +157,7 @@ const Home = (props: any) => {
 
   return (
     <div className="main">
+      <h2 className="company-page-user-name">{user?.firstName} {user?.lastName}</h2>
       <h2 className="title-list-company">Lista de Empresas</h2>
 
       <Button className="btn btn-success btn-create-company" variant="primary" onClick={() => setShow(true)}>
@@ -184,7 +177,7 @@ const Home = (props: any) => {
         </thead>
         <tbody>
             {companies.map((company: any, index: any) => 
-              <tr onClick={() => navigate("/company")}>
+              <tr onClick={() => navigate(`/company/${company.id}`)}>
                 <th scope="row">{company.name}</th>
                 <td>{company.cnpj}</td>
               </tr>

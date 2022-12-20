@@ -6,17 +6,10 @@
   align-items: center; */
 }
 
+.company-page-user-name,
 .title-list-company {
   margin-bottom: 3rem;
   margin-left: 11.69rem;
-}
-
-a {
-  color: black;
-}
-
-a:hover {
-  color:darkgreen;
 }
 
 label {
@@ -40,4 +33,12 @@ textarea {
 
 .btn-modal-create-company {
   width: 5rem;
+}
+
+.a-edit:hover {
+  color:gold;
+}
+
+.a-delete:hover {
+  color:red;
 }

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { Dispatch } from "@reduxjs/toolkit";
-import { getAllTickets, getTicketsByUserId, getUserById } from "../../store/fetchActions";
+import { getTicketsByUserId } from "../../store/fetchActions";
 
 const Ticket = () => {
   const navigate = useNavigate();
@@ -13,14 +13,11 @@ const Ticket = () => {
   const {register, handleSubmit, setValue, setFocus} = useForm();
 
   const { user } = useSelector((state: RootState) => state.Users);
-  const { ticketsByUserId } = useSelector((state: RootState) => state.Tickets);
-  const { tickets } = useSelector((state: RootState) => state.Tickets);
+  const { tickets, ticketsByUserId } = useSelector((state: RootState) => state.Tickets);
   const dispatch: Dispatch<any> = useDispatch();
 
   useEffect(() => {
-    dispatch(getUserById("6cc542b2-1174-4c71-9b48-61bd330a7a46"))
-    dispatch(getTicketsByUserId())
-    dispatch(getAllTickets())
+    dispatch(getTicketsByUserId(user.id))
   }, [])
 
   console.log(tickets)

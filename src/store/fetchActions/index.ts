@@ -2,116 +2,181 @@ import { Dispatch } from '@reduxjs/toolkit'
 import api from '../../services/api'
 import { getAccountables } from '../ducks/accountables'
 import { getCompany, getCompanies } from '../ducks/companies'
+import { useSelector, useDispatch } from 'react-redux'
 import { getLocation, getLocations } from '../ducks/locations'
+import { RootState } from "../../store"
 import { getTicket, getTickets, getTicketsById } from '../ducks/tickets'
-import { getUser } from '../ducks/users'
+import { getUser, logoutUser } from '../ducks/users'
 
-export const getUserById = (id: string) => {
+export const getCompanyById = (companyId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get(`/users/${id}`)
-      .then(res => {
-        dispatch(getUser(res.data))
-      })
-      .catch(console.log)
-  }
-}
-
-export const getCompanyById = () => {
-  return (dispatch: Dispatch) => {
-    api
-      .get('/companies/5b23de92-a7af-400c-83c5-c92230c16762')
+      .get(`/companies/${companyId}`)
       .then(res => {
         dispatch(getCompany(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
+      }
+      )
   }
 }
 
-export const getAllCompanies = (id: string) => {
+// export const deleteCompany = (companyId: string) => {
+//   return (dispatch: Dispatch) => {
+//     api
+//       .delete(`/companies/${companyId}`)
+//       .then(res => {
+//         dispatch(deleteCompany(res.data))
+//       })
+//       .catch(error => {
+//         if(error.response.status === 401) {
+//           dispatch(logoutUser())
+//         } else {
+//           console.log(error)
+//         }
+//       }
+//       )
+//   }
+// }
+
+export const getAllCompanies = (userId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get(`/companies/byUserId/${id}`)
+      .get(`/companies/byUserId/${userId}`)
       .then(res => {
         dispatch(getCompanies(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+          console.log("entrou aqui")
+        } else {
+          console.log(error)
+        }
+      })
   }
 }
 
-export const getLocationById = () => {
+export const getLocationById = (locationId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get('/locations/6df2e55a-4271-4ce4-ac5a-6cf981fb251d')
+      .get(`/locations/${locationId}`)
       .then(res => {
         dispatch(getLocation(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
+      })
   }
 }
 
-export const getAllLocations = () => {
+export const getAllLocations = (companyId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get('/locations/byCompanyId/5b23de92-a7af-400c-83c5-c92230c16762')
+      .get(`/locations/byCompanyId/${companyId}`)
       .then(res => {
         dispatch(getLocations(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
+      })
   }
 }
 
-export const getAllAccountablesByCompany = () => {
+export const getAllAccountablesByCompanyId = (companyId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get('/accountables/byCompanyId/5b23de92-a7af-400c-83c5-c92230c16762')
+      .get(`/accountables/byCompanyId/${companyId}`)
       .then(res => {
         dispatch(getAccountables(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
+      })
   }
 }
 
-export const getAllAccountablesByLocation = () => {
+export const getAllAccountablesByLocationId = (locationId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get('/accountables/byLocationId/6df2e55a-4271-4ce4-ac5a-6cf981fb251d')
+      .get(`/accountables/byLocationId/${locationId}`)
       .then(res => {
         dispatch(getAccountables(res.data))
       })
-      .catch(console.log)
-  }
-}
-
-export const getTicketById = () => {
-  return (dispatch: Dispatch) => {
-    api
-      .get('/tickets/6df2e55a-4271-4ce4-ac5a-6cf981fb251d')
-      .then(res => {
-        dispatch(getTicket(res.data))
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
       })
-      .catch(console.log)
   }
 }
 
-export const getTicketsByUserId = () => {
+// export const getTicketById = () => {
+//   return (dispatch: Dispatch) => {
+//     api
+//       .get('/tickets/6df2e55a-4271-4ce4-ac5a-6cf981fb251d')
+//       .then(res => {
+//         dispatch(getTicket(res.data))
+//       })
+//       .catch(error => {
+//         if(error.response.status === 401) {
+//           dispatch(logoutUser())
+//         } else {
+//           console.log(error)
+//         }
+//       })
+//   }
+// }
+
+export const getTicketsByUserId = (userId: string) => {
   return (dispatch: Dispatch) => {
     api
-      .get('/tickets/byUserId/6cc542b2-1174-4c71-9b48-61bd330a7a46')
+      .get(`/tickets/byUserId/${userId}`)
       .then(res => {
         dispatch(getTicketsById(res.data))
       })
-      .catch(console.log)
+      .catch(error => {
+        if(error.response.status === 401) {
+          dispatch(logoutUser())
+        } else {
+          console.log(error)
+        }
+      })
   }
 }
 
-export const getAllTickets = () => {
-  return (dispatch: Dispatch) => {
-    api
-      .get('/tickets')
-      .then(res => {
-        dispatch(getTickets(res.data))
-      })
-      .catch(console.log)
-  }
-}
+// export const getAllTickets = () => {
+//   return (dispatch: Dispatch) => {
+//     api
+//       .get('/tickets')
+//       .then(res => {
+//         dispatch(getTickets(res.data))
+//       })
+//       .catch(error => {
+//         if(error.response.status === 401) {
+//           dispatch(logoutUser())
+//         } else {
+//           console.log(error)
+//         }
+//       })
+//   }
+// }

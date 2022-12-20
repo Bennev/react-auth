@@ -1,28 +1,22 @@
-import React, { SyntheticEvent, useState } from 'react'
-import { Navigate } from 'react-router-dom'
-import axios from 'axios'
 import "./style.css"
+import { SyntheticEvent, useState } from 'react'
+import { Navigate } from 'react-router-dom'
+import { Dispatch } from '@reduxjs/toolkit'
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
+import { RootState } from "../../store"
+import { loginUser } from "../../store/ducks/users"
 
 const Login = (props: any) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [redirect, setRedirect] = useState(false)
 
+  const { user } = useSelector((state: RootState) => state.Users);
+  const dispatch: Dispatch<any> = useDispatch();
+
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault()
-
-    // const response = await fetch('http://localhost:8000/api/auth/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   credentials: 'include',
-    //   body: JSON.stringify({
-    //     email,
-    //     password
-    //   })
-    // })
-
     const response = await axios({
       url: 'http://localhost:8000/api/auth/login',
       method: 'POST',
@@ -37,9 +31,10 @@ const Login = (props: any) => {
     })
     .then(res => {
       console.log(res.data)
-      props.handleUserId(res.data.id)
+      dispatch(loginUser(res.data))
     })
 
+    // console.log(user)
     setRedirect(true)
   }
 

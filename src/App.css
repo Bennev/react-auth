@@ -10,6 +10,11 @@ main {
   height: 100vh;
 }
 
+a {
+  cursor: pointer;
+  color: black;
+}
+
 .form-signin .form-control {
   position: relative;
   height: relative;
