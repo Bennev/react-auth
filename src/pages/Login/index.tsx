@@ -1,6 +1,6 @@
 import "./style.css"
-import { SyntheticEvent, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { SyntheticEvent, useEffect, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { Dispatch } from '@reduxjs/toolkit'
 import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
@@ -12,8 +12,16 @@ const Login = (props: any) => {
   const [password, setPassword] = useState('')
   const [redirect, setRedirect] = useState(false)
 
+  const navigate = useNavigate();
+
   const { user } = useSelector((state: RootState) => state.Users);
   const dispatch: Dispatch<any> = useDispatch();
+
+  useEffect(()=> {
+    if(user?.id) {
+      navigate("/home")
+    } 
+  }, [user])
 
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault()

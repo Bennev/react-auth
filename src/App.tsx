@@ -16,14 +16,9 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(()=> {
-    if(user?.id) {
-      console.log('caso 1')
-      navigate("/home")
-    } 
-    else {
-      console.log('caso 2')
+    if(!user?.id) {
       navigate("/")
-    }
+    } 
   },[user])
 
   return (
